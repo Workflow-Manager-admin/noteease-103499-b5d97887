@@ -1,0 +1,41 @@
+<div class="modal-backdrop" (click)="handleClose()"></div>
+<div class="modal">
+  <div class="modal-header">
+    <h2>{{ type === 'edit' ? 'Edit Note' : 'New Note' }}</h2>
+    <button class="modal-close" aria-label="Close" (click)="handleClose()">×</button>
+  </div>
+  <form (submit)="handleSave(); $event.preventDefault()">
+    <div class="modal-body">
+      <input
+        type="text"
+        placeholder="Title"
+        [(ngModel)]="title"
+        name="title"
+        required
+        maxlength="80"
+        autofocus
+        class="modal-title-input"
+      />
+      <textarea
+        rows="7"
+        placeholder="Write your note..."
+        [(ngModel)]="content"
+        name="content"
+        maxlength="800"
+        class="modal-content-input"
+        required
+      ></textarea>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn secondary" (click)="handleClose()">Cancel</button>
+      <button
+        type="submit"
+        class="btn primary"
+        [disabled]="!title.trim()"
+        style="background: var(--primary); color: #fff"
+      >
+        {{ type === 'edit' ? 'Save' : 'Create' }}
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,44 @@
+<div class="container">
+  <header class="topnav">
+    <button class="sidebar-toggle" (click)="toggleSidebar()" aria-label="Toggle sidebar">
+      <span [ngClass]="{'rotated': showSidebar}">&#9776;</span>
+    </button>
+    <h1 class="app-title" style="color: var(--primary)">NoteEase</h1>
+    <button class="create-btn" (click)="openCreateModal()" style="background-color: var(--accent)">+ New Note</button>
+  </header>
+  <aside class="sidebar" [ngClass]="{'collapsed': !showSidebar}">
+    <div class="search-bar">
+      <input type="text" placeholder="Search notes..." [(ngModel)]="searchQuery" (input)="applySearch()"/>
+    </div>
+    <ul class="notes-list">
+      <li *ngFor="let note of filteredNotes" [ngClass]="{'active': selectedNote?.id == note.id}">
+        <div (click)="openEditModal(note)">
+          <div class="note-title">{{note.title}}</div>
+          <div class="note-snippet">{{note.content | slice:0:40}}{{note.content.length>40 ? '...' : ''}}</div>
+          <div class="note-date">{{note.updatedAt | date:'short'}}</div>
+        </div>
+        <button class="delete-btn" title="Delete" (click)="deleteNote(note)" style="color: var(--secondary)">🗑️</button>
+      </li>
+      <li *ngIf="filteredNotes.length === 0"><em>No notes found.</em></li>
+    </ul>
+  </aside>
+  <main class="main-content">
+    <div *ngIf="!filteredNotes.length" class="empty-state">No notes to display! Click <b>+ New Note</b> to create one.</div>
+    <div class="notes-wrapper" *ngIf="filteredNotes.length">
+      <div class="note-card" *ngFor="let note of filteredNotes" (click)="openEditModal(note)">
+        <div class="title">{{note.title}}</div>
+        <div class="content">{{note.content | slice:0:80}}{{note.content.length > 80 ? '...' : ''}}</div>
+        <div class="dates">
+          <span>Updated: {{note.updatedAt | date:'short'}}</span>
+        </div>
+      </div>
+    </div>
+  </main>
+  <app-note-modal
+      *ngIf="showModal"
+      [type]="modalType"
+      [note]="selectedNote"
+      (close)="closeModal()"
+      (save)="saveNote($event)"
+  ></app-note-modal>
+</div>
